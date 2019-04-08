@@ -1,0 +1,1 @@
+export {fetchNewsList} from './news'
