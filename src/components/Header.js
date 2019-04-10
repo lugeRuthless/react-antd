@@ -8,7 +8,6 @@ import Drawer from './Drawer'
 
 
 
-
 const styles = {
   root: {
     flexGrow: 1,
@@ -30,9 +29,19 @@ function DenseAppBar(props) {
         case 'home':
         title='首页';break;
         case 'news':
-        title='新闻';break;
+        if(location.hash.split('/')[2]){
+            title='新闻详情';
+        }else{
+            title='新闻'
+        }
+            break;
         case 'product':
-        title='产品列表';break;
+           if(location.hash.split('/')[2]){
+               title='商品详情';
+           }else{
+               title='商品列表'
+           }
+             break;
         case 'cart':
         title='购物车';break;
         case 'mine':

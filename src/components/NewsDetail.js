@@ -11,17 +11,8 @@ import ShoppingCart from '@material-ui/icons/ShoppingCart';
 import Badge from '@material-ui/core/Badge';
 
 import {Link} from 'react-router-dom'
+import Comment from './Comment'
 import axios from 'axios'
-
-import {connect} from 'react-redux'
-import {addToCart} from '../actions'
-
-const mapStateToProps=(state)=>{
-    return {
-        cart:state.cart
-    }
-}
-
 const styles = theme=>({
   card: {
     width:'100%',
@@ -30,12 +21,6 @@ const styles = theme=>({
     position:'fixed',
     width:'100%',
     bottom:0
-  },
-  full:{
-      overflow:'hidden',
-      textOverflow:'ellipsis',
-      whiteSpace:'nowrap',
-      width:'100%'
   },
   margin: {
     margin: theme.spacing.unit * 2,
@@ -50,66 +35,54 @@ class Detail extends Component {
   constructor(props){
         super(props)
         this.state={
-            product:{}
+            news:{}
         }
     }
   componentWillMount(){
         axios({
-            url:`http://localhost:3000/product/${this.props.match.params.id}`,
+            url:`http://localhost:3000/news/${this.props.match.params.id}`,
             method:'get'
         }).then(res=>{
             this.setState({
-                product:{...this.state.product,...res.data}
+                news:{...this.state.product,...res.data}
             })
         })
     }
- handlerClick(data){
-     this.props.addToCart(data)
- }
   render(){
-     // console.log(this.props.cart)
       const { classes } = this.props;
-      const { product }  =this.state;
-      var allNum=0;
-        this.props.cart.map((value,index)=>{
-            allNum+=parseInt(value.quantity);
-        })
-      if(product.img){
+      const { news }  =this.state;
+      if(news.img){
           return (
             <div>
                 <Card className={classes.card}>
                     <CardMedia
                     component="img"
-                    alt={product.name}
+                    alt={news.title}
                     className={classes.media}
                     width='100%'
-                    height='250'
-                    image={product.img[0]}
-                    title={product.name}
+                    height='100%'
+                    image={news.img[0]}
+                    title={news.title}
                     />
                     <CardContent>
                     <Typography gutterBottom variant="h5"  component="h2">
-                       {product.name}
+                       {news.title}
                     </Typography>
-                    <Typography gutterBottom variant="h5" style={{color:'red',fontSize:16}} component="h3">
-                       ￥{product.price.now}
-                    </Typography>
-                    <Typography component="p" className={classes.full}>
-                        {product.text}
+
+                    <Typography component="p">
+                        {news.descript}
                     </Typography>
                     </CardContent>
-
+                    <Comment/>
                     <Button color="primary" onClick={()=>{this.props.history.goBack()}}>回到上级</Button>
                     <CardActions className={classes.btn}>
-                    <Button size="small" variant="contained" style={{height:60,width:'50%'}} component={Link}
+                    <Button size="small" variant="contained"  style={{height:58,width:'50%'}}
                     to='/cart' color="primary">
-                        <Badge color="secondary" badgeContent={allNum} className={classes.margin}>
-                            <ShoppingCart/>
-                        </Badge>
+                            查看评论
                     </Button>
-                        <Button size="small" variant="contained" onClick={()=>{this.handlerClick(product)}}  style={{height:60,width:'50%'}} color="primary">
-                            加入购物车
-                        </Button>
+                    <Button size="small" variant="contained"   style={{height:58,width:'50%'}} color="primary">
+                            评论
+                    </Button>
                     </CardActions>
                 </Card>
             </div>
@@ -125,4 +98,4 @@ Detail.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps,{addToCart})(withStyles(styles)(Detail));
+export default withStyles(styles)(Detail);

@@ -11,11 +11,12 @@ import PersonPinIcon from '@material-ui/icons/PersonPin';
 
 import HomeComponent from './Home'
 import News from './News'
+import NewsDetail from './NewsDetail'
 import Product from './Product'
 import Cart from './Cart'
 import Mine from './Mine'
 import Detail from './Detail'
-import {HashRouter as Router,Route,Switch,NavLink} from 'react-router-dom'
+import {HashRouter as Router,Route,Switch} from 'react-router-dom'
 
 const styles = {
   root: {
@@ -23,11 +24,16 @@ const styles = {
     position:'fixed',
     bottom:0,
   },
+  rootNull:{
+    width: '100%',
+    position:'fixed',
+    bottom:-56,
+  }
 };
 
 class SimpleBottomNavigation extends React.Component {
   state = {
-    value: 0,
+    value: '/home',
   };
 
   handleChange = (event, value) => {
@@ -39,12 +45,12 @@ class SimpleBottomNavigation extends React.Component {
   render() {
     const { classes } = this.props;
     const { value } = this.state;
-   // console.log(location.hash.split('/')[1].trim())
     return (
         <div>
             <div style={{marginTop:48,marginBottom:56}}>
                 <Switch>
                     <Route path='/home' component={HomeComponent}/>
+                    <Route path='/news/:id' component={NewsDetail}/>
                     <Route path='/news' component={News}/>
                     <Route path='/product/:id' component={Detail}/>
                     <Route path='/product' component={Product} exact/>
@@ -57,7 +63,7 @@ class SimpleBottomNavigation extends React.Component {
                 value={value}
                 onChange={this.handleChange}
                 showLabels
-                className={classes.root}
+                className={(location.hash.split('/')[2]==null) && (location.hash.split('/')[1] !=='cart')?classes.root:classes.rootNull}
             >
                 <BottomNavigationAction label="首页" value='/home' icon={<Home />} />
                 <BottomNavigationAction label="新闻" value='/news' icon={<FiberNew />} />

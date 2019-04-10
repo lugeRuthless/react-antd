@@ -56,7 +56,7 @@ function ImgMediaCard(props) {
                         alt={value.text}
                         className={classes.media}
                         height="140"
-                        image={value.img}
+                        image={value.img[0]}
                     />
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="h5" style={{overflow: 'hidden',
