@@ -11,8 +11,14 @@ import ShoppingCart from '@material-ui/icons/ShoppingCart';
 import Badge from '@material-ui/core/Badge';
 
 import {Link} from 'react-router-dom'
-import Comment from './Comment'
 import axios from 'axios'
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
+
 const styles = theme=>({
   card: {
     width:'100%',
@@ -25,6 +31,18 @@ const styles = theme=>({
   margin: {
     margin: theme.spacing.unit * 2,
   },
+  full:{
+    overflow:'hidden',
+    textOverflow:'ellipsis',
+    whiteSpace:'nowrap',
+    width:'100%'
+  },
+  btn:{
+    position:'fixed',
+    width:'100%',
+    bottom:0,
+    zIndex:999
+  },
   media: {
     // ⚠️ object-fit is not supported by IE 11.
     objectFit: 'cover',
@@ -35,22 +53,40 @@ class Detail extends Component {
   constructor(props){
         super(props)
         this.state={
-            news:{}
+            news:{},
+            comment:[],
+            page:1
         }
     }
+
+
+ getList(){
+    axios({
+        url:`${GLOBALURL}comment?parentId=${this.props.match.params.id}&_page=${this.state.page}&_limit=5`,
+        method:'get'
+    }).then(res=>{
+        this.setState({
+            comment:[...this.state.comment,...res.data],
+            page:this.state.page+1
+        })
+    })
+ }
+
   componentWillMount(){
         axios({
-            url:`http://localhost:3000/news/${this.props.match.params.id}`,
+            url:`${GLOBALURL}news/${this.props.match.params.id}`,
             method:'get'
         }).then(res=>{
             this.setState({
                 news:{...this.state.product,...res.data}
+            },()=>{
+                this.getList()
             })
         })
     }
   render(){
       const { classes } = this.props;
-      const { news }  =this.state;
+      const { news,comment }  =this.state;
       if(news.img){
           return (
             <div>
@@ -73,18 +109,42 @@ class Detail extends Component {
                         {news.descript}
                     </Typography>
                     </CardContent>
-                    <Comment/>
-                    <Button color="primary" onClick={()=>{this.props.history.goBack()}}>回到上级</Button>
+
                     <CardActions className={classes.btn}>
                     <Button size="small" variant="contained"  style={{height:58,width:'50%'}}
-                    to='/cart' color="primary">
-                            查看评论
+                    onClick={()=>{this.getList()}}
+                    color="primary">
+                            查看更多评论
                     </Button>
                     <Button size="small" variant="contained"   style={{height:58,width:'50%'}} color="primary">
                             评论
                     </Button>
                     </CardActions>
                 </Card>
+                <div>
+                  <List className={classes.root}>
+                    {comment.map((value,index)=>{
+                        return (
+                            <ListItem alignItems="flex-start" key={index}>
+                            <ListItemAvatar>
+                                <Avatar alt="Remy Sharp" src={value.avatar} />
+                            </ListItemAvatar>
+                            <ListItemText
+                                primary={value.title}
+                                secondary={
+                                <React.Fragment>
+                                    <Typography className={classes.full} component="span" color="textPrimary">
+                                    {value.text}
+                                    </Typography>
+                                    {value.time}
+                                </React.Fragment>
+                                }
+                            />
+                            </ListItem>
+                        )
+                    })}
+                </List>
+                </div>
             </div>
         );
       }else{

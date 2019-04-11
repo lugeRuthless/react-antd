@@ -16,6 +16,13 @@ import axios from 'axios'
 import {connect} from 'react-redux'
 import {addToCart} from '../actions'
 
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
+
+
 const mapStateToProps=(state)=>{
     return {
         cart:state.cart
@@ -23,13 +30,21 @@ const mapStateToProps=(state)=>{
 }
 
 const styles = theme=>({
+    root: {
+        width: '100%',
+        backgroundColor: theme.palette.background.paper,
+      },
+      inline: {
+        display: 'inline',
+      },
   card: {
     width:'100%',
   },
   btn:{
     position:'fixed',
     width:'100%',
-    bottom:0
+    bottom:0,
+    zIndex:999
   },
   full:{
       overflow:'hidden',
@@ -43,23 +58,33 @@ const styles = theme=>({
   media: {
     // ⚠️ object-fit is not supported by IE 11.
     objectFit: 'cover',
-  },
+  }
 });
 
 class Detail extends Component {
   constructor(props){
         super(props)
         this.state={
-            product:{}
+            product:{},
+            comment:[]
         }
     }
   componentWillMount(){
         axios({
-            url:`http://localhost:3000/product/${this.props.match.params.id}`,
+            url:`${GLOBALURL}product/${this.props.match.params.id}`,
             method:'get'
         }).then(res=>{
             this.setState({
                 product:{...this.state.product,...res.data}
+            },()=>{
+                axios({
+                    url:`${GLOBALURL}comment?parentId=${this.props.match.params.id}`,
+                    method:'get'
+                }).then(res=>{
+                    this.setState({
+                        comment:res.data
+                    })
+                })
             })
         })
     }
@@ -69,14 +94,14 @@ class Detail extends Component {
   render(){
      // console.log(this.props.cart)
       const { classes } = this.props;
-      const { product }  =this.state;
+      const { product,comment }  =this.state;
       var allNum=0;
         this.props.cart.map((value,index)=>{
             allNum+=parseInt(value.quantity);
         })
       if(product.img){
           return (
-            <div>
+            <div style={{marginBottom:76}}>
                 <Card className={classes.card}>
                     <CardMedia
                     component="img"
@@ -98,8 +123,6 @@ class Detail extends Component {
                         {product.text}
                     </Typography>
                     </CardContent>
-
-                    <Button color="primary" onClick={()=>{this.props.history.goBack()}}>回到上级</Button>
                     <CardActions className={classes.btn}>
                     <Button size="small" variant="contained" style={{height:60,width:'50%'}} component={Link}
                     to='/cart' color="primary">
@@ -112,6 +135,30 @@ class Detail extends Component {
                         </Button>
                     </CardActions>
                 </Card>
+                <div>
+                <List className={classes.root}>
+                    {comment.map((value,index)=>{
+                        return (
+                            <ListItem alignItems="flex-start" key={index}>
+                            <ListItemAvatar>
+                                <Avatar alt="Remy Sharp" src={value.avatar} />
+                            </ListItemAvatar>
+                            <ListItemText
+                                primary={value.title}
+                                secondary={
+                                <React.Fragment>
+                                    <Typography className={classes.full} component="span" color="textPrimary">
+                                    {value.text}
+                                    </Typography>
+                                    {value.time}
+                                </React.Fragment>
+                                }
+                            />
+                            </ListItem>
+                        )
+                    })}
+                </List>
+                </div>
             </div>
         );
       }else{

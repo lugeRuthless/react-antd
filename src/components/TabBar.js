@@ -17,6 +17,7 @@ import Cart from './Cart'
 import Mine from './Mine'
 import Detail from './Detail'
 import {HashRouter as Router,Route,Switch} from 'react-router-dom'
+import Header from './Header'
 
 const styles = {
   root: {
@@ -42,11 +43,19 @@ class SimpleBottomNavigation extends React.Component {
     });
   };
 
+  componentWillMount(){
+    this.setState({
+        value:location.hash.split('#')[1]
+    })
+  }
   render() {
+
     const { classes } = this.props;
     const { value } = this.state;
+
     return (
         <div>
+           <Header  history={this.props.history}/>
             <div style={{marginTop:48,marginBottom:56}}>
                 <Switch>
                     <Route path='/home' component={HomeComponent}/>

@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import Drawer from './Drawer'
 
 
@@ -20,14 +21,21 @@ const styles = {
     marginLeft: -18,
     marginRight: 10,
   },
+  drawer:{
+      float:'right'
+  }
 };
 
 function DenseAppBar(props) {
   const { classes } = props;
   let title=location.hash.split('/')[1].trim()
     switch(title){
+        case '':
+
         case 'home':
-        title='首页';break;
+        title='首页';
+
+        break;
         case 'news':
         if(location.hash.split('/')[2]){
             title='新闻详情';
@@ -52,11 +60,11 @@ function DenseAppBar(props) {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar variant="dense">
-
-          <Drawer/>
+          {title=='首页' || title=='我的' ?null:<KeyboardArrowLeft  onClick={()=>{props.history.goBack()}}/>}
           <Typography variant="h6" color="inherit">
             {title}
           </Typography>
+          <Drawer/>
         </Toolbar>
       </AppBar>
     </div>

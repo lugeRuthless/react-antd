@@ -7,6 +7,8 @@ import {HashRouter as Router,Route,Switch,NavLink} from 'react-router-dom'
 import store from './store'
 import {Provider} from 'react-redux'
 
+window.GLOBALURL='http://localhost:3000/'
+
 class Index extends Component{
     render(){
        // console.log(location.hash.split('/')[1].trim())
@@ -14,7 +16,7 @@ class Index extends Component{
             <Provider store={store}>
                 <Router>
                     <CssBaseline>
-                        <Header/>
+
                         <div>
                             <Switch>
                                 <Route path='/' component={TabBar}/>

@@ -96,7 +96,7 @@ class Simple extends Component{
     }
     getListData=()=>{
         axios({
-            url:`http://localhost:3000/news?_page=${this.state.page}&_limit=20&_sort=time&_order=desc`,
+            url:`${GLOBALURL}news?_page=${this.state.page}&_limit=20&_sort=time&_order=desc`,
             method:'get'
         }).then(res=>{
             //console.log(res.data)

@@ -14,6 +14,17 @@ import Paper from '@material-ui/core/Paper';
 import {connect} from 'react-redux'
 import {changeTotalNum,addToCart,removeToCart,deleteCart} from '../actions'
 
+import Checkbox from '@material-ui/core/Checkbox';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
+
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
+var _=require('lodash')
 const mapStateToProps=(state)=>{
     return {
         cart:state.cart
@@ -68,6 +79,12 @@ const styles = theme => ({
 });
 
 class Cart extends Component{
+    state={
+        checkValues:[],
+        allNum:0,
+        allTotal:0
+    }
+
     handlerChange=(ev,value)=>{
         if(ev.target.value<0){
             ev.target.value=1
@@ -78,7 +95,7 @@ class Cart extends Component{
         }
     }
     handlerAddClick=(data)=>{
-        this.props.addToCart(data)
+            this.props.addToCart(data)
     }
     handlerRemoveClick=(data)=>{
         if(data.quantity>1){
@@ -86,10 +103,41 @@ class Cart extends Component{
         }
     }
 
+
+
+    handlerCheckboxChange=(data)=>()=>{
+        var checkValues=this.state.checkValues.slice()
+       // var newVal=JSON.parse(event.target.value);
+       var newVal=data
+       // var index=checkValues.indexOf(newVal)
+        var index=_.findIndex(this.state.checkValues,{id:newVal.id})
+             if(index==-1){
+                checkValues.push(newVal)
+            }else{
+                checkValues.splice(index,1)
+            }
+            this.setState({
+                checkValues
+            },()=>{
+                var allNum=0;
+                var allTotal=0;
+                this.state.checkValues.map((value,index)=>{
+                    allNum+=parseFloat(value.subTotal);
+                    allTotal+=parseInt(value.quantity);
+                })
+               this.setState({
+                    allNum,
+                    allTotal
+               })
+            })
+
+    }
+
+
     render(){
         const { classes, theme } = this.props;
-        var allNum=0;
-        var allTotal=0;
+        /* var allNum=0;
+        var allTotal=0; */
          if(this.props.cart.length==0){
           return (
               <div>
@@ -107,9 +155,15 @@ class Cart extends Component{
           return (
               <div>
                   {this.props.cart.map((value,index)=>{
-                      allNum+=parseInt(value.quantity);
-                      allTotal+=parseFloat(value.subTotal);
-                    return(<Card className={classes.card} key={index}>
+                     /*  allNum+=parseInt(value.quantity);
+                      allTotal+=parseFloat(value.subTotal); */
+                    return(
+                        <Card className={classes.card} key={index}>
+                        <Checkbox
+                            name='group'
+                            onChange={this.handlerCheckboxChange(value)}
+                            value={JSON.stringify(value)}
+                            />
                           <CardMedia
                               className={classes.cover}
                               image={value.img[0]}
@@ -126,7 +180,8 @@ class Cart extends Component{
                           </CardContent>
                           <div className={classes.controls}>
                           数量
-                          <Remove onClick={()=>{this.handlerRemoveClick(value)}}/>
+                          <Remove onClick={()=>{
+                            this.handlerRemoveClick(value)}}/>
                           <TextField
                           id="standard-number"
                           value={value.quantity}
@@ -149,8 +204,8 @@ class Cart extends Component{
                   })}
 
                   <Paper className={classes.pay} elevation={1}>
-                            总数：{allNum}
-                            总价：{allTotal}
+                            总数：{this.state.allTotal}
+                            总价：{this.state.allNum}
                             <Button variant="contained" style={{position:'absolute',right:0,height:'100%'}} color='secondary'>立即结算</Button>
                     </Paper>
 
