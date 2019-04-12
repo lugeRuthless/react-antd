@@ -1,28 +1,12 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import {Card,CardContent,CardMedia,Button,Typography,TextField,Paper,Checkbox} from '@material-ui/core';
 import Add from '@material-ui/icons/Add';
-import TextField from '@material-ui/core/TextField';
 import Remove from '@material-ui/icons/Remove';
 import DeleteIcon  from '@material-ui/icons/Delete';
-import Paper from '@material-ui/core/Paper';
 import {connect} from 'react-redux'
 import {changeTotalNum,addToCart,removeToCart,deleteCart} from '../actions'
-
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 
 var _=require('lodash')
 const mapStateToProps=(state)=>{
@@ -30,7 +14,6 @@ const mapStateToProps=(state)=>{
         cart:state.cart
     }
 }
-
 const styles = theme => ({
   card: {
     display: 'flex',
@@ -51,10 +34,6 @@ const styles = theme => ({
     alignItems: 'center',
     paddingLeft: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
-  },
-  playIcon: {
-    height: 38,
-    width: 38,
   },
   textField: {
     marginLeft: theme.spacing.unit,
@@ -82,62 +61,153 @@ class Cart extends Component{
     state={
         checkValues:[],
         allNum:0,
-        allTotal:0
+        allTotal:0,
+        flag:false,
+        isSelected:[]
     }
 
     handlerChange=(ev,value)=>{
         if(ev.target.value<0){
             ev.target.value=1
         }else{
-
-            value.quantity=ev.target.value
+            value.quantity=parseInt(ev.target.value)
             this.props.changeTotalNum(value)
+            this.updateAllNumTotal()
         }
     }
     handlerAddClick=(data)=>{
             this.props.addToCart(data)
+            this.updateAllNumTotal()
+
     }
     handlerRemoveClick=(data)=>{
         if(data.quantity>1){
             this.props.removeToCart(data)
+            this.updateAllNumTotal()
         }
     }
 
-
-
-    handlerCheckboxChange=(data)=>()=>{
+    updateAllNumTotal(){
+        var allNum=0;
+        var allTotal=0;
+        this.state.checkValues.map((value,index)=>{
+            allNum+=parseFloat(value.subTotal);
+            allTotal+=parseInt(value.quantity);
+        })
+        this.setState({
+            allNum,
+            allTotal
+        })
+    }
+    componentWillMount(){
+       // console.log('componentWillMount')
+        this.setState({
+            isSelected:this.props.cart.map(()=>true),
+            checkValues:this.props.cart
+        },()=>{
+            this.updateAllNumTotal()
+        })
+    }
+    componentDidMount(){
+        var len=this.state.isSelected.filter((value)=>value==true).length
+        if(len==this.state.isSelected.length){
+            this.setState({
+                flag:!this.state.flag
+            },()=>{
+                //console.log(this.state.checkValues)
+            })
+        }
+    }
+    componentWillReceiveProps(){
+        this.updateAllNumTotal();
+        var len=this.state.isSelected.filter((value)=>value==true).length
+        if(len==this.state.isSelected.length && this.state.flag == false){
+            this.setState({
+                flag:!this.state.flag
+            },()=>{
+                this.updateAllNumTotal();
+            })
+        }
+    }
+    handlerCheckboxChange=(suoyin)=>()=>{
         var checkValues=this.state.checkValues.slice()
-       // var newVal=JSON.parse(event.target.value);
-       var newVal=data
+        var newVal=JSON.parse(event.target.value);
        // var index=checkValues.indexOf(newVal)
+
         var index=_.findIndex(this.state.checkValues,{id:newVal.id})
              if(index==-1){
                 checkValues.push(newVal)
             }else{
                 checkValues.splice(index,1)
             }
+            this.state.isSelected[suoyin]=!this.state.isSelected[suoyin]
+
             this.setState({
-                checkValues
+                checkValues,
+                isSelected:this.state.isSelected
             },()=>{
-                var allNum=0;
-                var allTotal=0;
-                this.state.checkValues.map((value,index)=>{
-                    allNum+=parseFloat(value.subTotal);
-                    allTotal+=parseInt(value.quantity);
-                })
-               this.setState({
-                    allNum,
-                    allTotal
-               })
+                //console.log(this.state.isSelected)
+                var len=this.state.isSelected.filter((value)=>value==true).length
+               // console.log(this.state.isSelected.filter((value)=>value==true))
+                if(!this.state.isSelected[suoyin]){
+                    this.setState({
+                        flag:false
+                    },()=>{
+
+                        this.updateAllNumTotal();
+                    })
+                }else if(len == this.state.isSelected.length){
+                    this.setState({
+                        flag:true
+                    },()=>{
+                        this.updateAllNumTotal();
+                    })
+                }
+             //  this.updateAllNumTotal();
+            // console.log(this.state.checkValues)
             })
 
+    }
+    selectAll=(data)=>ev=>{
+       // console.log(this.state.isSelected)
+       // var len=this.state.isSelected.filter((value)=>value==true).length
+        if(ev.target.checked){
+            this.setState({
+                flag:!this.state.flag
+            },()=>{
+                this.setState({
+                    isSelected:this.state.isSelected.map(()=>true),
+                },()=>{this.updateAllNumTotal()})
+            })
+        }else{
+             this.setState({
+            flag:!this.state.flag
+            },()=>{
+                this.setState({
+                    isSelected:this.state.isSelected.map(()=>false),
+                    allNum:0,
+                    allTotal:0
+                })
+            })
+        }
+        //console.log(len)
+        //console.log(ev.target.checked)
+       /// console.log(data)
+       // console.log(this.refs)
+       //console.log(this.state)
+        //console.log(this.state)
+        //console.log(ev.target.checked){
+        //}
+        /* this.setState({
+            flag:ev.target.checked
+        },()=>{
+            //console.log(this.state.checkValues)
+        }) */
     }
 
 
     render(){
         const { classes, theme } = this.props;
-        /* var allNum=0;
-        var allTotal=0; */
          if(this.props.cart.length==0){
           return (
               <div>
@@ -145,6 +215,9 @@ class Cart extends Component{
                     购物车为空，快去购物吧
                 </div>
                 <Paper className={classes.pay} elevation={1}>
+                    <Checkbox
+                        disabled
+                    />
                      总数：{0}
                      总价：{0}
                      <Button variant="contained" style={{position:'absolute',right:0,height:'100%'}} color='secondary'>立即结算</Button>
@@ -161,7 +234,9 @@ class Cart extends Component{
                         <Card className={classes.card} key={index}>
                         <Checkbox
                             name='group'
-                            onChange={this.handlerCheckboxChange(value)}
+                           // ref={`checkbox${index}`}
+                            checked={this.state.isSelected[index]}
+                            onChange={this.handlerCheckboxChange(index)}
                             value={JSON.stringify(value)}
                             />
                           <CardMedia
@@ -204,11 +279,16 @@ class Cart extends Component{
                   })}
 
                   <Paper className={classes.pay} elevation={1}>
+                            <Checkbox
+                                name='group'
+                                 checked={this.state.flag}
+                                onChange={this.selectAll(this.props.cart)}
+                                value={'selectAll'}
+                            />
                             总数：{this.state.allTotal}
                             总价：{this.state.allNum}
                             <Button variant="contained" style={{position:'absolute',right:0,height:'100%'}} color='secondary'>立即结算</Button>
                     </Paper>
-
               </div>
             );
         }

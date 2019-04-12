@@ -1,32 +1,14 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import {Card,CardActions,CardContent,CardMedia,Button,Typography,Badge,List,ListItem,ListItemText,ListItemAvatar,Avatar} from '@material-ui/core';
 import ShoppingCart from '@material-ui/icons/ShoppingCart';
-import Badge from '@material-ui/core/Badge';
-
 import {Link} from 'react-router-dom'
 import axios from 'axios'
-
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
 
 const styles = theme=>({
   card: {
     width:'100%',
-  },
-  btn:{
-    position:'fixed',
-    width:'100%',
-    bottom:0
   },
   margin: {
     margin: theme.spacing.unit * 2,
@@ -59,7 +41,6 @@ class Detail extends Component {
         }
     }
 
-
  getList(){
     axios({
         url:`${GLOBALURL}comment?parentId=${this.props.match.params.id}&_page=${this.state.page}&_limit=5`,
@@ -71,7 +52,6 @@ class Detail extends Component {
         })
     })
  }
-
   componentWillMount(){
         axios({
             url:`${GLOBALURL}news/${this.props.match.params.id}`,
@@ -150,7 +130,6 @@ class Detail extends Component {
       }else{
         return false;
       }
-
   }
 }
 

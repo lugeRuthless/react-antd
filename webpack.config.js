@@ -2,6 +2,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin"); //提取css插件
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');//压缩css插件
 //js压缩已经在package.json中已完成
+//gzip 压缩
+//const CompressionPlugin=require('compression-webpack-plugin')
 
 module.exports={
     //入口文件
@@ -50,6 +52,15 @@ module.exports={
             filename: "[name].css",
             chunkFilename: "[id].css"
         }),
-        new OptimizeCssAssetsPlugin()
+        new OptimizeCssAssetsPlugin(),
+
+        /* new CompressionPlugin({
+            filename:'[path].gz[query]',
+            algorithm:'gzip',
+            test: /\.js$|\.css$|\.html$|\.svg?.+$|\.eot?.+$|\.woff?.+$|\.ttf?.+$/,
+            threshold: 10240,
+            minRatio: 0.8,
+            deleteOriginalAssets: false
+        }) */
       ]
 }

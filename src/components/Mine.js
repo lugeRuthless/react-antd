@@ -1,38 +1,18 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent  from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import CardMedia from '@material-ui/core/CardMedia';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import BottomNavigation from '@material-ui/core/BottomNavigation';
-import Fab from '@material-ui/core/Fab';
+import {Card,CardContent,CardMedia,CardActions,BottomNavigationAction,BottomNavigation,Fab,Typography,List,ListItem,ListItemIcon,ListItemText,Divider,Button,TextField,Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import Typography from '@material-ui/core/Typography';
 import Subject from '@material-ui/icons/Subject';
 import QuestionAnswer from '@material-ui/icons/QuestionAnswer';
 import PlaylistAddCheck from '@material-ui/icons/PlaylistAddCheck';
-
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
 import AddLocation from '@material-ui/icons/AddLocation';
+import CheckCircle from '@material-ui/icons/CheckCircle';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import CreditCard from '@material-ui/icons/CreditCard';
 import Settings from '@material-ui/icons/Settings';
 import Message from '@material-ui/icons/Message';
-
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios'
 
 const styles =theme=> ({
@@ -115,10 +95,9 @@ class Mine extends Component{
                          message:res.data[0].username
                          });
                     alert('登录成功')
-
                 }else{
                     this.setState({
-                        username:'',
+                        //username:'',
                         password:''
                     },()=>{
                         alert('用户名或密码错误')
@@ -135,13 +114,17 @@ class Mine extends Component{
       <CardContent className={classes.bg}>
         <CardMedia
           className={classes.media}
-          image="src/asserts/images/banner.gif"
+          image="./asserts/images/banner.gif"
           title="Contemplative Reptile"
         />
         <div className={classes.login}>
-        <Fab color="secondary">
-            <AddIcon onClick={this.handleClickOpen} />
+        {this.state.message=='点击登录'
+        ?<Fab color="secondary">
+            <AddIcon onClick={this.handleClickOpen}/>
         </Fab>
+       :<Fab color="primary">
+            <CheckCircle onClick={this.handleClickOpen} />
+        </Fab>}
         <p className={classes.bg}>{this.state.message}</p>
         </div>
       </CardContent>
@@ -189,6 +172,7 @@ class Mine extends Component{
                 autoFocus
                 margin="dense"
                 label="用户名"
+                placeholder='admin'
                 type="email"
                 fullWidth
                 value={this.state.username}
@@ -200,6 +184,7 @@ class Mine extends Component{
                 id="password"
                 label="密码"
                 type="password"
+                placeholder='admin'
                 fullWidth
                 value={this.state.password}
                 onChange={(e)=>{this.handlerChangePassword(e)}}

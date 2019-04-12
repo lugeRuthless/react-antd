@@ -34,6 +34,9 @@ function Cart(state=initialState,action){
             return state.filter(item=>{
                 return item.id!==action.payload.id
             })
+
+        case 'CALCULATE':
+            return [...state]
         default:
            return state
     }

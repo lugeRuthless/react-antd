@@ -25,3 +25,9 @@ export const deleteCart=(data)=>{
         payload:data
     }
 }
+
+export const calculate=()=>{
+    return {
+        type:'CALCULATE'
+    }
+}

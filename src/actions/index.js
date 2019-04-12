@@ -1,2 +1,3 @@
 export {fetchNewsList} from './news'
-export {addToCart,changeTotalNum,removeToCart,deleteCart} from './cart'
+export {addToCart,changeTotalNum,removeToCart,deleteCart,calculate} from './cart'
+export {carousel,fetchCarousel} from './home'

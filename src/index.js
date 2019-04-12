@@ -7,7 +7,7 @@ import {HashRouter as Router,Route,Switch,NavLink} from 'react-router-dom'
 import store from './store'
 import {Provider} from 'react-redux'
 
-window.GLOBALURL='http://localhost:3000/'
+window.GLOBALURL='http://129.204.212.211:3003/'
 
 class Index extends Component{
     render(){

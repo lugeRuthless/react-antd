@@ -1,24 +1,11 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-
+import {Card,CardContent,CardMedia,Button,Typography} from '@material-ui/core';
 import axios from 'axios'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {fetchNewsList} from '../actions'
-
-/* const mapStateToProps=(state)=>{
-   // console.log(state)
-    return {
-        news:state.news
-    }
-} */
-
 
 const styles = {
   card: {
@@ -29,21 +16,12 @@ const styles = {
     float:'left',
     width:'33%'
   },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  },
   title: {
     fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
+  }
 };
 
 function SimpleCard(props) {
-   /// console.log(props)
   const { classes } = props;
   return (
       <div>
@@ -56,7 +34,6 @@ function SimpleCard(props) {
                             </Typography>
                             <Typography variant="h5" component="h2">
                             {value.img.map((value,index)=>{
-                                // console.log(value)
                                  return (
                                      <CardMedia
                                      key={index}
@@ -99,7 +76,6 @@ class Simple extends Component{
             url:`${GLOBALURL}news?_page=${this.state.page}&_limit=20&_sort=time&_order=desc`,
             method:'get'
         }).then(res=>{
-            //console.log(res.data)
             this.setState({
                 list:[...this.state.list,...res.data],
                 page:this.state.page+1
@@ -112,7 +88,6 @@ class Simple extends Component{
     }
 
     render(){
-
         return (
             <SimpleCard {...this.props} {...this.state}/>
         )

@@ -1,34 +1,18 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import {Card,CardActions,CardContent,CardMedia,Button,Typography,Badge,List,ListItem,ListItemText,ListItemAvatar,Avatar} from '@material-ui/core';
 import ShoppingCart from '@material-ui/icons/ShoppingCart';
-import Badge from '@material-ui/core/Badge';
-
 import {Link} from 'react-router-dom'
 import axios from 'axios'
-
 import {connect} from 'react-redux'
 import {addToCart} from '../actions'
-
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-
 
 const mapStateToProps=(state)=>{
     return {
         cart:state.cart
     }
 }
-
 const styles = theme=>({
     root: {
         width: '100%',
@@ -92,7 +76,6 @@ class Detail extends Component {
      this.props.addToCart(data)
  }
   render(){
-     // console.log(this.props.cart)
       const { classes } = this.props;
       const { product,comment }  =this.state;
       var allNum=0;

@@ -8,7 +8,7 @@ export const getNewsListData=(data)=>{
 
 export function fetchNewsList(){
     return dispatch=>{
-        var url=`http://localhost:3000/news`
+        var url=`${GLOBALURL}news`
         return axios({
             url,
             method:'get'

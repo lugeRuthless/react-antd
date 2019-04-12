@@ -1,18 +1,9 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import Divider from '@material-ui/core/Divider';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-
+import {Card,Divider,CardActionArea,CardActions,CardContent,CardMedia,Button,Typography} from '@material-ui/core';
 import {NavLink} from 'react-router-dom'
 import axios from 'axios'
-
 
 const styles = {
   card: {
@@ -79,8 +70,6 @@ function ImgMediaCard(props) {
             })}
             <div style={{clear:'both',height: 0, lineHeight: 0, fontSize: 0}}></div>
         </div>
-
-
     );
   }
 
@@ -101,7 +90,6 @@ class Product extends Component{
             url:`${GLOBALURL}product?_page=${this.state.page}&_limit=20&_sort=time&_order=desc`,
             method:'get'
         }).then(res=>{
-            //console.log(res.data)
             this.setState({
                 list:[...this.state.list,...res.data],
                 page:this.state.page+1
@@ -114,7 +102,6 @@ class Product extends Component{
     }
 
     render(){
-
         return (
             <ImgMediaCard {...this.props} {...this.state}/>
         )

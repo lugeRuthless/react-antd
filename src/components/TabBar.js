@@ -1,14 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import BottomNavigation from '@material-ui/core/BottomNavigation';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import {BottomNavigation,BottomNavigationAction} from '@material-ui/core'
 import ShoppingCart from '@material-ui/icons/ShoppingCart';
 import Home from '@material-ui/icons/Home';
 import FiberNew from '@material-ui/icons/FiberNew';
 import ListAlt from '@material-ui/icons/ListAlt';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
-
 import HomeComponent from './Home'
 import News from './News'
 import NewsDetail from './NewsDetail'
@@ -43,7 +41,12 @@ class SimpleBottomNavigation extends React.Component {
     });
   };
 
-  componentWillMount(){
+    componentWillMount(){
+        this.setState({
+            value:location.hash.split('#')[1]
+        })
+    }
+  componentWillReceiveProps(){
     this.setState({
         value:location.hash.split('#')[1]
     })

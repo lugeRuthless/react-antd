@@ -9,7 +9,17 @@ import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
+import Slider from 'react-slick'
 import axios from 'axios'
+import {connect} from 'react-redux'
+import {fetchCarousel} from '../actions'
+
+const mapStateToProps=state=>{
+    return {
+        home:state.home
+    }
+}
+
 const styles = theme => ({
   card: {
     width: '100%'
@@ -18,9 +28,13 @@ const styles = theme => ({
     height: 0,
     paddingTop: '56.25%', // 16:9
   },
+  carousel:{
+      height:210
+  },
   actions: {
     display: 'flex',
   },
+
   expand: {
     transform: 'rotate(0deg)',
     marginLeft: 'auto',
@@ -56,6 +70,7 @@ class RecipeReviewCard extends React.Component {
                 home:res.data
             })
         })
+        this.props.fetchCarousel();
   }
   handlerFab(){
 
@@ -64,9 +79,34 @@ class RecipeReviewCard extends React.Component {
   render() {
     const { classes } = this.props;
     const {home} =this.state;
+    var settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        autoplay:true,
+        slidesToScroll: 1
+      };
     return (
         <div>
-            {home.map((value,index)=>{
+        {this.props.home.length>0 ?
+        <div>
+        <div style={{overflow:'hidden',height:250}}>
+          <Slider  {...settings}>
+          {this.props.home.map((value,index)=>{
+              return (
+                <CardMedia
+                className={classes.carousel}
+                key={index}
+
+                image={value.img}
+                title=""
+                />
+              )
+          })}
+          </Slider>
+          </div>
+          {home.map((value,index)=>{
                 return (
                     <div key={index}>
                     <Card className={classes.card}>
@@ -138,6 +178,9 @@ class RecipeReviewCard extends React.Component {
                 )
             })}
         </div>
+          :''}
+
+        </div>
 
     );
   }
@@ -147,4 +190,4 @@ RecipeReviewCard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(RecipeReviewCard);
+export default connect(mapStateToProps,{fetchCarousel})(withStyles(styles)(RecipeReviewCard));
